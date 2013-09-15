@@ -183,8 +183,8 @@ Module ModuleHOF
         NewObjHOF%arrayB   = NULL_REAL
         NewObjHOF%arrayRes = NULL_REAL
 
-do1:    DO J = JMIN, JMAX
-do2:    DO I = IMIN, IMAX
+do1:    DO I = IMIN, IMAX
+do2:    DO J = JMIN, JMAX
             NewObjHOF%arrayA(I, J) = I * 2.1
             NewObjHOF%arrayB(I, J) = J * 3.4
         ENDDO do2
