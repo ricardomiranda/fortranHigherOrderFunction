@@ -70,10 +70,10 @@ module ModuleFL
 !$OMP DO
 do1 :   DO I = IMIN, IMAX
 do2 :   DO J = JMIN, JMAX
-            arrayRes(I, J) = f2A(arrayA(I, J), arrayB(I, J)) + f2A(arrayA(I, J), arrayB(I, J)) / f2A(arrayA(I, J), arrayB(I, J))
+            arrayRes(I, J) = f2A(arrayA(I, J), arrayB(I, J))
         ENDDO do2
         ENDDO do1
-!$OMP END DO
+!$OMP END DO 
 !$OMP END PARALLEL
 
         CalcArraysOp => arrayRes
