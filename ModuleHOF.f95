@@ -11,7 +11,7 @@
 !------------------------------------------------------------------------------
 !
 !This program is free software; you can redistribute it and/or
-!modify it under the terms of the GNU General Public License 
+!modify it under the terms of the GNU General Public License
 !version 2, as published by the Free Software Foundation.
 !
 !This program is distributed in the hope that it will be useful,
@@ -24,7 +24,7 @@
 !Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 !
 !------------------------------------------------------------------------------
- 
+
 Module ModuleHOF
 
     use ModuleFL
@@ -32,23 +32,23 @@ Module ModuleHOF
     implicit none
 
     !Types---------------------------------------------------------------------
-    
+
     public :: T_Arrays
     type      T_Arrays
         private
         real(8), dimension(:, :),  pointer :: arrayRes
         !Computed every time step
-        
+
         real(8), dimension(:, :),  pointer :: arrayA
         real(8), dimension(:, :),  pointer :: arrayB
-        
+
         integer, pointer :: IMIN, IMAX, ILB, IUB
         integer, pointer :: JMIN, JMAX, JLB, JUB
     end type  T_Arrays
 
     !--------------------------------------------------------------------------
 
-    private 
+    private
 
     integer :: NULL_INT  =-99999
     real(8) :: NULL_REAL =-99999.99
@@ -73,19 +73,19 @@ Module ModuleHOF
     public  :: GetJMAX
     public  :: GetJLB
     public  :: GetJUB
-                         
+
     !Modifier
     public  :: CalcResult
 
     !Destructor
-    public  :: KillHOF                                                    
+    public  :: KillHOF
     private ::      DeAllocateInstance
     public  :: HOFGarbageCollector
-    
+
     !Interfaces----------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    
+
     contains
 
 
@@ -97,13 +97,13 @@ Module ModuleHOF
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    function ConstructHOF(IMIN, IMAX, ILB, IUB,                           &
-                          JMIN, JMAX, JLB, JUB) 
+    pure function ConstructHOF(IMIN, IMAX, ILB, IUB,                           &
+                          JMIN, JMAX, JLB, JUB)
 
         !Arguments---------------------------------------------------------------
         integer, intent(IN) :: IMIN, IMAX, ILB, IUB
         integer, intent(IN) :: JMIN, JMAX, JLB, JUB
-        
+
         !Return------------------------------------------------------------------
         type (T_Arrays), pointer :: ConstructHOF
 
@@ -115,29 +115,29 @@ Module ModuleHOF
         call AllocateInstance(NewObjHOF,                                        &
                               ILB, IUB,                                         &
                               JLB, JUB)
-                          
+
         call InitializeValues(NewObjHOF,                                        &
                               IMIN, IMAX, ILB, IUB,                             &
                               JMIN, JMAX, JLB, JUB)
-                         
+
         ConstructHOF => NewObjHOF
 
         !----------------------------------------------------------------------
 
     end function ConstructHOF
- 
+
     !--------------------------------------------------------------------------
-     
-    subroutine AllocateInstance(NewObjHOF,                                    &
-                                ILB, IUB,                                     &
-                                JLB, JUB) 
+
+    pure subroutine AllocateInstance(NewObjHOF,                                    &
+                                     ILB, IUB,                                     &
+                                     JLB, JUB)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: NewObjHOF
 
         integer, intent(IN) :: ILB, IUB
         integer, intent(IN) :: JLB, JUB
-                                                    
+
         !Local-----------------------------------------------------------------
 
         !Allocates new instance
@@ -147,10 +147,10 @@ Module ModuleHOF
 
         allocate (NewObjHOF%arrayB  (ILB:IUB,                                   &
                                      JLB:JUB))
-        
+
         allocate (NewObjHOF%arrayRes(ILB:IUB,                                   &
                                      JLB:JUB))
-        
+
         allocate (NewObjHOF%IMIN)
         allocate (NewObjHOF%IMAX)
         allocate (NewObjHOF%ILB )
@@ -161,22 +161,22 @@ Module ModuleHOF
         allocate (NewObjHOF%JUB )
 
     end subroutine AllocateInstance
- 
+
     !--------------------------------------------------------------------------
-    
-    subroutine InitializeValues(NewObjHOF,                                    &
-                                IMIN, IMAX, ILB, IUB,                         &
-                                JMIN, JMAX, JLB, JUB) 
+
+    pure subroutine InitializeValues(NewObjHOF,                                    &
+                                     IMIN, IMAX, ILB, IUB,                         &
+                                     JMIN, JMAX, JLB, JUB)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: NewObjHOF
 
         integer, intent(IN) :: IMIN, IMAX, ILB, IUB
         integer, intent(IN) :: JMIN, JMAX, JLB, JUB
-                                                    
+
         !Local-----------------------------------------------------------------
         integer :: I, J
-        
+
         !----------------------------------------------------------------------
 
         NewObjHOF%arrayA   = NULL_REAL
@@ -202,12 +202,12 @@ do2:    DO J = JMIN, JMAX
     end subroutine InitializeValues
 
     !--------------------------------------------------------------------------
-    
-    function AllocateReplica(ObjHOF) 
+
+    function AllocateReplica(ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer                               :: ObjHOF
-                                                    
+
         !Return----------------------------------------------------------------
         type (T_Arrays), pointer                               :: AllocateReplica
 
@@ -215,7 +215,7 @@ do2:    DO J = JMIN, JMAX
         type (T_Arrays), pointer                               :: NewObjHOF
 
         !-----------------------------------------------------------------------
-        
+
         !Allocates new values
         allocate (NewObjHOF)
 
@@ -245,10 +245,10 @@ do2:    DO J = JMIN, JMAX
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    
+
 
     !--------------------------------------------------------------------------
-    
+
     function GetArrayRes (ObjHOF)
 
         !Arguments-------------------------------------------------------------
@@ -262,9 +262,9 @@ do2:    DO J = JMIN, JMAX
         GetArrayRes => ObjHOF%arrayRes
 
     end function GetArrayRes
-    
+
     !--------------------------------------------------------------------------
-    
+
     function GetArrayA (ObjHOF)
 
         !Arguments-------------------------------------------------------------
@@ -278,9 +278,9 @@ do2:    DO J = JMIN, JMAX
         GetArrayA => ObjHOF%arrayA
 
     end function GetArrayA
-    
+
     !--------------------------------------------------------------------------
-    
+
     function GetArrayB (ObjHOF)
 
         !Arguments-------------------------------------------------------------
@@ -294,10 +294,10 @@ do2:    DO J = JMIN, JMAX
         GetArrayB => ObjHOF%arrayB
 
     end function GetArrayB
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetIMAX (ObjHOF)
+
+    pure function GetIMAX (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
@@ -310,10 +310,10 @@ do2:    DO J = JMIN, JMAX
         GetIMAX = ObjHOF%IMAX
 
     end function GetIMAX
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetIMIN (ObjHOF)
+
+    pure function GetIMIN (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
@@ -326,10 +326,10 @@ do2:    DO J = JMIN, JMAX
         GetIMIN = ObjHOF%IMIN
 
     end function GetIMIN
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetILB (ObjHOF)
+
+    pure function GetILB (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
@@ -342,10 +342,10 @@ do2:    DO J = JMIN, JMAX
         GetILB = ObjHOF%ILB
 
     end function GetILB
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetIUB (ObjHOF)
+
+    pure function GetIUB (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
@@ -358,10 +358,10 @@ do2:    DO J = JMIN, JMAX
         GetIUB = ObjHOF%IUB
 
     end function GetIUB
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetJMIN (ObjHOF)
+
+    pure function GetJMIN (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
@@ -374,10 +374,10 @@ do2:    DO J = JMIN, JMAX
         GetJMIN = ObjHOF%JMIN
 
     end function GetJMIN
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetJMAX (ObjHOF)
+
+    pure function GetJMAX (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
@@ -390,10 +390,10 @@ do2:    DO J = JMIN, JMAX
         GetJMAX = ObjHOF%JMAX
 
     end function GetJMAX
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetJLB (ObjHOF)
+
+    pure function GetJLB (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
@@ -406,10 +406,10 @@ do2:    DO J = JMIN, JMAX
         GetJLB = ObjHOF%JLB
 
     end function GetJLB
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetJUB (ObjHOF)
+
+    pure function GetJUB (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
@@ -424,7 +424,7 @@ do2:    DO J = JMIN, JMAX
     end function GetJUB
 
     !--------------------------------------------------------------------------
-    
+
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -447,7 +447,7 @@ do2:    DO J = JMIN, JMAX
         !----------------------------------------------------------------------
 
         NewObjHOF          => AllocateReplica(ObjHOF)
-        
+
         NewObjHOF%arrayRes => CalcArraysOp   (exampleFunction,                 &
                                               ObjHOF%arrayA,                   &
                                               ObjHOF%arrayB,                   &
@@ -455,7 +455,7 @@ do2:    DO J = JMIN, JMAX
                                               ObjHOF%ILB, ObjHOF%IUB,          &
                                               ObjHOF%JMIN, ObjHOF%JMAX,        &
                                               ObjHOF%JLB, ObjHOF%JUB)
-        
+
         CalcResult         => NewObjHOF
 
     end function CalcResult
@@ -464,18 +464,18 @@ do2:    DO J = JMIN, JMAX
 
     pure function exampleFunction (A, B)
 
-        !Arguments-------------------------------------------------------------         
+        !Arguments-------------------------------------------------------------
         real(8), intent(IN) :: A, B
 
         !Local-----------------------------------------------------------------
 
         !Return----------------------------------------------------------------
         real(8) :: exampleFunction
-                                                    
+
         !----------------------------------------------------------------------
 
-        exampleFunction = A * B + (A + B * SQRT(B)) / 2.2 + A * A - B * B * A * 1.1 - 2.0 / (A*B) + 3*(sqrt(a)/sqrt(b)) 
-        
+        exampleFunction = A * B + (A + B * SQRT(B)) / 2.2 + A * A - B * B * A * 1.1 - 2.0 / (A*B) + 3*(sqrt(a)/sqrt(b))
+
     end function exampleFunction
 
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -488,12 +488,12 @@ do2:    DO J = JMIN, JMAX
 
 
 
-    subroutine KillHOF(ObjHOF)
+    pure subroutine KillHOF(ObjHOF)
 
         !Arguments---------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
-        
-        !Return------------------------------------------------------------------         
+
+        !Return------------------------------------------------------------------
 
         !External----------------------------------------------------------------
 
@@ -507,16 +507,16 @@ do2:    DO J = JMIN, JMAX
         !------------------------------------------------------------------------
 
     end subroutine KillHOF
-        
+
 
     !------------------------------------------------------------------------
-    
-    
-    subroutine DeallocateInstance (ObjHOF)
+
+
+    pure subroutine DeallocateInstance (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
-                                                    
+
         !Local-----------------------------------------------------------------
 
         !------------------------------------------------------------------------
@@ -530,21 +530,21 @@ do2:    DO J = JMIN, JMAX
         deallocate (ObjHOF%JMAX)
         deallocate (ObjHOF%JLB )
         deallocate (ObjHOF%JUB )
-        
+
         deallocate (ObjHOF%arrayRes)
         deallocate (ObjHOF%arrayA)
         deallocate (ObjHOF%arrayB)
         deallocate (ObjHOF)
-            
+
     end subroutine DeallocateInstance
 
     !--------------------------------------------------------------------------
 
-    subroutine HOFGarbageCollector (ObjHOF)
+    pure subroutine HOFGarbageCollector (ObjHOF)
 
         !Arguments-------------------------------------------------------------
         type (T_Arrays), pointer :: ObjHOF
-                                                    
+
         !Local-----------------------------------------------------------------
 
         !------------------------------------------------------------------------
@@ -552,7 +552,7 @@ do2:    DO J = JMIN, JMAX
         !Partially deallocates instance
         deallocate (ObjHOF%arrayRes)
         deallocate (ObjHOF)
-            
+
         !------------------------------------------------------------------------
 
     end subroutine HOFGarbageCollector

@@ -11,7 +11,7 @@
 !------------------------------------------------------------------------------
 !
 !This program is free software; you can redistribute it and/or
-!modify it under the terms of the GNU General Public License 
+!modify it under the terms of the GNU General Public License
 !version 2, as published by the Free Software Foundation.
 !
 !This program is distributed in the hope that it will be useful,
@@ -24,7 +24,7 @@
 !Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 !
 !------------------------------------------------------------------------------
- 
+
 program MainHOF
 
     use ModuleHOF
@@ -47,19 +47,19 @@ program MainHOF
 !    private :: AllocateReplica
 
     !Selector
-                         
+
     !Modifier
 !    public  :: Main
 !    private ::      Loop
 !    private ::      exampleFunction
 
     !Destructor
-!    public  :: KillMainHOF                                                    
+!    public  :: KillMainHOF
 
     !---------------------------------------------------------------------------
 
     contains
-    
+
     !--------------------------------------------------------------------------
 
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -81,7 +81,7 @@ program MainHOF
         call ASkQuestions     (ObjMainHOF)
 
     end subroutine ConstructMainHOF
-    
+
     !--------------------------------------------------------------------------
 
     subroutine ASkQuestions (ObjMainHOF)
@@ -100,21 +100,21 @@ program MainHOF
         read*,  ObjMainHOF%NbrSteps
 
     end subroutine ASkQuestions
-    
+
     !--------------------------------------------------------------------------
 
     function StartHOF ()
 
         !Local-------------------------------------------------------------------
         integer :: IMIN, IMAX, ILB, IUB
-        integer :: JMIN, JMAX, JLB, JUB        
+        integer :: JMIN, JMAX, JLB, JUB
 
         !Return----------------------------------------------------------------
         type (T_Arrays), pointer  :: StartHOF
-        
+
         !Local-----------------------------------------------------------------
         type (T_Arrays), pointer  :: NewObjHDF
-                                                    
+
         !----------------------------------------------------------------------
 
         print*, "IMIN?"
@@ -143,13 +143,13 @@ program MainHOF
 
         NewObjHDF => ConstructHOF (IMIN, IMAX, ILB, IUB,                       &
                                    JMIN, JMAX, JLB, JUB)
-                                   
+
         StartHOF  => NewObjHDF
     end function StartHOF
-    
+
     !--------------------------------------------------------------------------
 
-    subroutine AllocateInstance (ObjMainHOF)
+    pure subroutine AllocateInstance (ObjMainHOF)
         !Arguments-------------------------------------------------------------
         type(T_MainHOF), pointer :: ObjMainHOF
 
@@ -158,7 +158,7 @@ program MainHOF
         allocate (ObjMainHOF)
 
     end subroutine AllocateInstance
-    
+
     !--------------------------------------------------------------------------
 
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -171,7 +171,7 @@ program MainHOF
 
     !--------------------------------------------------------------------------
 
-    subroutine Main 
+    subroutine Main
 
         !Local-----------------------------------------------------------------
         type(T_MainHOF), pointer :: ObjMainHOF
@@ -185,12 +185,12 @@ program MainHOF
         call Loop          (ObjMainHOF, ObjHOF, ObjMainHOF%NbrSteps)
 
     end subroutine Main
-    
+
     !--------------------------------------------------------------------------
 
     recursive subroutine Loop (ObjMainHOF, ObjHOF, NbrSteps)
-        
-        !Arguments-------------------------------------------------------------         
+
+        !Arguments-------------------------------------------------------------
         type(T_MainHOF), pointer :: ObjMainHOF
         type(T_Arrays ), pointer :: ObjHOF
         real(8), intent(IN)      :: NbrSteps
@@ -202,7 +202,6 @@ program MainHOF
 
 cd1 :   if (NbrSteps .LE. 0.0) then
             print*, "Simulation terminated successfully."
-
             call killMainHOF (ObjMainHOF, ObjHOF)
 
         else   cd1
@@ -212,9 +211,9 @@ cd1 :   if (NbrSteps .LE. 0.0) then
             print*, NbrSteps, GetArrayRes(NewObjHOF)
             call Loop (ObjMainHOF, NewObjHOF, NbrSteps - ObjMainHOF%DT)
         end if cd1
-    
+
     end subroutine Loop
-    
+
     !--------------------------------------------------------------------------
 
 
@@ -230,7 +229,7 @@ cd1 :   if (NbrSteps .LE. 0.0) then
 
 
 
-    subroutine KillMainHOF (ObjMainHOF, ObjHOF)
+    pure subroutine KillMainHOF (ObjMainHOF, ObjHOF)
         !Arguments-------------------------------------------------------------
         type(T_MainHOF), pointer :: ObjMainHOF
         type(T_Arrays ), pointer :: ObjHOF
@@ -242,7 +241,7 @@ cd1 :   if (NbrSteps .LE. 0.0) then
         deallocate   (ObjMainHOF)
 
     end subroutine KillMainHOF
-    
+
     !--------------------------------------------------------------------------
 
 end program MainHOF

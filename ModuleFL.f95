@@ -11,7 +11,7 @@
 !------------------------------------------------------------------------------
 !
 !This program is free software; you can redistribute it and/or
-!modify it under the terms of the GNU General Public License 
+!modify it under the terms of the GNU General Public License
 !version 2, as published by the Free Software Foundation.
 !
 !This program is distributed in the hope that it will be useful,
@@ -24,12 +24,12 @@
 !Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 !
 !------------------------------------------------------------------------------
- 
+
 module ModuleFL
 
-    implicit none 
+    implicit none
 
-    private 
+    private
 
     real(8) :: NULL_REAL =-99999.99
 
@@ -42,16 +42,21 @@ module ModuleFL
     !---------------------------------------------------------------------------
 
     function CalcArraysOp(f2A,                                                 &
-                          arrayA,                                              &
-                          arrayB,                                              &
-                          IMIN, IMAX, ILB, IUB,                                &
-                          JMIN, JMAX, JLB, JUB)
+                               arrayA,                                              &
+                               arrayB,                                              &
+                               IMIN, IMAX, ILB, IUB,                                &
+                               JMIN, JMAX, JLB, JUB)
 
         !Arguments-------------------------------------------------------------
-        real(8), external   :: f2A
         integer, intent(IN) :: IMIN, IMAX, ILB, IUB
-        integer, intent(IN) :: JMIN, JMAX, JLB, JUB        
-        real(8), dimension(:, :), pointer :: CalcArraysOp        
+        integer, intent(IN) :: JMIN, JMAX, JLB, JUB
+        real(8), dimension(:, :), pointer :: CalcArraysOp
+
+        interface
+            real(8) pure function f2A(A,B)
+                real(8), intent(IN) :: A, B
+            end function f2A
+        end interface
 
         !Return------------------------------------------------------------------
         real(8), dimension(:, :), pointer :: arrayA, arrayB
@@ -66,14 +71,14 @@ module ModuleFL
                            JLB:JUB))
         arrayRes =  NULL_REAL
 
-!$OMP PARALLEL 
+!$OMP PARALLEL
 !$OMP DO
 do1 :   DO I = IMIN, IMAX
 do2 :   DO J = JMIN, JMAX
             arrayRes(I, J) = f2A(arrayA(I, J), arrayB(I, J))
         ENDDO do2
         ENDDO do1
-!$OMP END DO 
+!$OMP END DO NOWAIT
 !$OMP END PARALLEL
 
         CalcArraysOp => arrayRes
